@@ -22,6 +22,10 @@ public abstract class Piece {
 
     protected abstract Set<Movement> movements();
 
+    public boolean isTypeOf(PieceType pieceType) {
+        return this.pieceType == pieceType;
+    }
+
     public void moveTo(Square square) {
         this.square = square;
     }

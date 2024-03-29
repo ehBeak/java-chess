@@ -22,6 +22,7 @@ import chess.domain.piece.BlackPawn;
 import chess.domain.piece.King;
 import chess.domain.piece.Knight;
 import chess.domain.piece.Piece;
+import chess.domain.piece.PieceType;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.piece.WhitePawn;
@@ -32,6 +33,7 @@ import java.util.Set;
 
 public class Chessboard {
 
+    private static final int INITIAL_KING_COUNT = 2;
     private final Map<Square, Piece> chessboard;
 
     private Chessboard(final Map<Square, Piece> chessboard) {
@@ -106,6 +108,13 @@ public class Chessboard {
     private void movePieceToTarget(final Square source, final Square target) {
         chessboard.put(target, chessboard.get(source));
         chessboard.remove(source);
+    }
+
+    public boolean isEnd() {
+        long count = chessboard.values().stream()
+                .filter(piece -> piece.isTypeOf(PieceType.KING))
+                .count();
+        return count != INITIAL_KING_COUNT;
     }
 
     private boolean isBlank(final Square square) {

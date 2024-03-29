@@ -34,11 +34,19 @@ public class ChessGame {
 
     private void playByCommand(final Chessboard chessboard) {
         String command = inputView.askCommand();
-        while (Command.isMove(command)) {
-            MoveCommand moveCommand = new MoveCommand(command);
-            chessboard.move(moveCommand.source(), moveCommand.target());
-            resultView.printBoard(new ChessboardDto(chessboard));
-            command = inputView.askCommand();
+        playChessGame(chessboard, command);
+    }
+
+    private void playChessGame(final Chessboard chessboard, String command) {
+        if (!Command.isMove(command)) {
+            return;
         }
+        MoveCommand moveCommand = new MoveCommand(command);
+        chessboard.move(moveCommand.source(), moveCommand.target());
+        resultView.printBoard(new ChessboardDto(chessboard));
+        if (chessboard.isEnd()) {
+            return;
+        }
+        playChessGame(chessboard, inputView.askCommand());
     }
 }
