@@ -44,7 +44,7 @@ public class ChessGame {
         MoveCommand moveCommand = new MoveCommand(command);
         chessboard.move(moveCommand.source(), moveCommand.target());
         resultView.printBoard(new ChessboardDto(chessboard));
-        if (chessboard.isEnd()) {
+        if (chessboard.catchKing()) {
             return;
         }
         playChessGame(chessboard, inputView.askCommand());

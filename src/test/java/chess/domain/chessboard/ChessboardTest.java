@@ -44,7 +44,7 @@ class ChessboardTest {
         chessBoard.move(Square.of(D, ONE), Square.of(H, FIVE));
         chessBoard.move(Square.of(H, FIVE), Square.of(E, EIGHT));
 
-        assertTrue(chessBoard.isEnd());
+        assertTrue(chessBoard.catchKing());
     }
 
     /*

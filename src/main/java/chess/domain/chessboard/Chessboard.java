@@ -30,7 +30,6 @@ import chess.domain.piece.WhitePawn;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -116,7 +115,7 @@ public class Chessboard {
         chessboard.remove(source);
     }
 
-    public boolean isEnd() {
+    public boolean catchKing() {
         long count = chessboard.values().stream()
                 .filter(piece -> piece.isTypeOf(PieceType.KING))
                 .count();
