@@ -15,6 +15,7 @@ import static chess.domain.attribute.Rank.ONE;
 import static chess.domain.attribute.Rank.SEVEN;
 import static chess.domain.attribute.Rank.TWO;
 
+import chess.domain.attribute.Color;
 import chess.domain.attribute.File;
 import chess.domain.attribute.Square;
 import chess.domain.piece.Bishop;
@@ -29,7 +30,9 @@ import chess.domain.piece.WhitePawn;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class Chessboard {
 
@@ -40,6 +43,9 @@ public class Chessboard {
         this.chessboard = chessboard;
     }
 
+    protected static Chessboard createChessBoard(Map<Square, Piece> map) {//todo
+        return new Chessboard(new HashMap<>(map));
+    }
 
     public static Chessboard createChessBoard() {
         Map<Square, Piece> chessboard = new HashMap<>();
@@ -116,6 +122,43 @@ public class Chessboard {
                 .count();
         return count != INITIAL_KING_COUNT;
     }
+
+    public double totalScoreOf(Color color) {
+        Set<Piece> samColorPieces = chessboard.entrySet().stream()
+                .filter(entry -> entry.getValue().isAllyOf(color))
+                .map(Entry::getValue)
+                .collect(Collectors.toSet());
+
+        Double exceptPawnScore = samColorPieces.stream()
+                .filter(piece -> piece.isNotTypeOf(PieceType.PAWN))
+                .reduce(0.0,
+                        (sum, piece) -> sum + piece.getScore(),
+                        (previous, next) -> next);
+
+        Set<Piece> pawns = samColorPieces.stream()
+                .filter(piece -> piece.isTypeOf(PieceType.PAWN))
+                .collect(Collectors.toSet());
+
+        double sum = 0;
+        for (Piece pawn : pawns) {
+            if (hasSameFileIn(pawns, pawn.getLocatedFile())) {
+                sum += 0.5;
+                continue;
+            }
+            sum += 1;
+        }
+
+        sum += exceptPawnScore;
+        return sum;
+    }
+
+    private boolean hasSameFileIn(Set<Piece> pawns, File file) {
+        long count = pawns.stream()
+                .filter(pawn -> pawn.locateSameFile(file))
+                .count();
+        return count > 1;
+    }
+
 
     private boolean isBlank(final Square square) {
         return !chessboard.containsKey(square);

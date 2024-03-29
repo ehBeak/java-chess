@@ -64,6 +64,14 @@ public class Square {
         return true;
     }
 
+    public boolean isSameFile(File file) {
+        return this.file == file;
+    }
+
+    public boolean isSameRank(Rank rank) {
+        return this.rank == rank;
+    }
+
     public Square move(Movement movement) {
         return moveHorizontal(movement.getX()).moveVertical(movement.getY());
     }
@@ -205,6 +213,14 @@ public class Square {
             return rank.isRankTwo();
         }
         return rank.isRankSeven();
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public Rank getRank() {
+        return rank;
     }
 
     @Override

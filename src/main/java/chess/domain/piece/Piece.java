@@ -1,7 +1,9 @@
 package chess.domain.piece;
 
 import chess.domain.attribute.Color;
+import chess.domain.attribute.File;
 import chess.domain.attribute.Movement;
+import chess.domain.attribute.Rank;
 import chess.domain.attribute.Square;
 import java.util.Objects;
 import java.util.Set;
@@ -26,6 +28,10 @@ public abstract class Piece {
         return this.pieceType == pieceType;
     }
 
+    public boolean isNotTypeOf(PieceType pieceType) {
+        return this.pieceType != pieceType;
+    }
+
     public void moveTo(Square square) {
         this.square = square;
     }
@@ -38,8 +44,20 @@ public abstract class Piece {
         return color != other.color;
     }
 
+    public boolean isAllyOf(Color color) {
+        return this.color == color;
+    }
+
     public Square currentSquare() {
         return square;
+    }
+
+    public double getScore() {
+        return this.pieceType.getScore();
+    }
+
+    public File getLocatedFile() {
+        return square.getFile();
     }
 
     public Color getColor() {
@@ -67,5 +85,13 @@ public abstract class Piece {
     @Override
     public int hashCode() {
         return Objects.hash(getColor(), getPieceType(), square);
+    }
+
+    public boolean locateSameFile(File file) {
+        return square.isSameFile(file);
+    }
+
+    public boolean locateSameRank(Rank rank) {
+        return square.isSameRank(rank);
     }
 }
