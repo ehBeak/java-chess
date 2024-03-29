@@ -124,32 +124,40 @@ public class Chessboard {
     }
 
     public double totalScoreOf(Color color) {
-        Set<Piece> samColorPieces = chessboard.entrySet().stream()
-                .filter(entry -> entry.getValue().isAllyOf(color))
-                .map(Entry::getValue)
-                .collect(Collectors.toSet());
+        Set<Piece> samColorPieces = findSameAllyPieces(color);
+        double exceptPawnScore = calculateTotalScoreExceptPawn(samColorPieces);
+        Set<Piece> pawns = filterPawns(samColorPieces);
+        return pawns.stream()
+                .reduce(exceptPawnScore,
+                        (res, pawn) -> calculatePawnScore(res, pawn, pawns),
+                        (prev, next) -> next);
+    }
 
-        Double exceptPawnScore = samColorPieces.stream()
+    private Double calculatePawnScore(Double res, Piece pawn, Set<Piece> pawns) {
+        if (hasSameFileIn(pawns, pawn.getLocatedFile())) {
+            return res + 0.5;
+        }
+        return res + 1;
+    }
+
+    private Set<Piece> filterPawns(Set<Piece> sameColorPieces) {
+        return sameColorPieces.stream()
+                .filter(piece -> piece.isTypeOf(PieceType.PAWN))
+                .collect(Collectors.toSet());
+    }
+
+    private Set<Piece> findSameAllyPieces(Color color) {
+        return chessboard.values().stream()
+                .filter(piece -> piece.isAllyOf(color))
+                .collect(Collectors.toSet());
+    }
+
+    private double calculateTotalScoreExceptPawn(Set<Piece> sameColorPieces) {
+        return sameColorPieces.stream()
                 .filter(piece -> piece.isNotTypeOf(PieceType.PAWN))
                 .reduce(0.0,
                         (sum, piece) -> sum + piece.getScore(),
                         (previous, next) -> next);
-
-        Set<Piece> pawns = samColorPieces.stream()
-                .filter(piece -> piece.isTypeOf(PieceType.PAWN))
-                .collect(Collectors.toSet());
-
-        double sum = 0;
-        for (Piece pawn : pawns) {
-            if (hasSameFileIn(pawns, pawn.getLocatedFile())) {
-                sum += 0.5;
-                continue;
-            }
-            sum += 1;
-        }
-
-        sum += exceptPawnScore;
-        return sum;
     }
 
     private boolean hasSameFileIn(Set<Piece> pawns, File file) {
