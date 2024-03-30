@@ -1,5 +1,6 @@
 package chess;
 
+import chess.domain.attribute.Color;
 import chess.domain.chessboard.Chessboard;
 import chess.view.InputView;
 import chess.view.ResultView;
@@ -45,8 +46,22 @@ public class ChessGame {
         chessboard.move(moveCommand.source(), moveCommand.target());
         resultView.printBoard(new ChessboardDto(chessboard));
         if (chessboard.catchKing()) {
+            endGame(chessboard);
             return;
         }
         playChessGame(chessboard, inputView.askCommand());
+    }
+
+    private void endGame(Chessboard chessboard) {
+        resultView.printGameEndMessage();
+        String endCommand = inputView.askCommand();
+        if (Command.isStatus(endCommand)) {
+            resultView.printStatus(Color.WHITE, chessboard.totalScoreOf(Color.WHITE));
+            resultView.printStatus(Color.BLACK, chessboard.totalScoreOf(Color.BLACK));
+
+        }
+        if (Command.isEnd(endCommand)) {
+            return;
+        }
     }
 }
