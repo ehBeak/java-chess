@@ -34,37 +34,38 @@ public class ChessGame {
         playByCommand(chessboard);
     }
 
-    private void playByCommand(final Chessboard chessboard) {
-        String command = inputView.askCommand();
-        playChessGame(chessboard, command);
-    }
-
-    private void playChessGame(final Chessboard chessboard, String command) {
-        if (!Command.isMove(command)) {
-            return;
-        }
-        MoveCommand moveCommand = new MoveCommand(command);
-        chessboard.move(moveCommand.source(), moveCommand.target());
-        resultView.printBoard(new ChessboardDto(chessboard));
+    private void playByCommand(final Chessboard chessboard) {//todo 상태패턴
         if (chessboard.catchKing()) {
             endGame(chessboard);
             return;
         }
-        playChessGame(chessboard, inputView.askCommand());
+        String command = inputView.askCommand();
+        if (Command.isMove(command)) {
+            moveChessPiece(chessboard, command);
+            playByCommand(chessboard);
+        }
+        if (Command.isStatus(command)) {
+            boardStatus(chessboard);
+        }
+        if (Command.isEnd(command)) {
+            endGame(chessboard);
+        }
+        throw new IllegalArgumentException("잘못된 명령어 입니다.");
+    }
+
+    private void moveChessPiece(final Chessboard chessboard, String command) {
+        MoveCommand moveCommand = new MoveCommand(command);
+        chessboard.move(moveCommand.source(), moveCommand.target());
+        resultView.printBoard(new ChessboardDto(chessboard));
+    }
+
+    private void boardStatus(Chessboard chessboard) {
+        resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
+        resultView.printStatus(Color.WHITE, chessboard.totalScoreOf(Color.WHITE));
+        resultView.printStatus(Color.BLACK, chessboard.totalScoreOf(Color.BLACK));
     }
 
     private void endGame(Chessboard chessboard) {
-        resultView.printGameEndMessage();
-        String endCommand = inputView.askCommand();
-        if (Command.isStatus(endCommand)) {
-            System.out.println("---------");
-            resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
-            resultView.printStatus(Color.WHITE, chessboard.totalScoreOf(Color.WHITE));
-            resultView.printStatus(Color.BLACK, chessboard.totalScoreOf(Color.BLACK));
-            return;
-        }
-        if (Command.isEnd(endCommand)) {
-            resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
-        }
+        resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
     }
 }
