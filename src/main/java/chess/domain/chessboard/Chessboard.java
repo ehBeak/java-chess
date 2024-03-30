@@ -174,4 +174,33 @@ public class Chessboard {
     public Map<Square, Piece> getChessboard() {
         return Map.copyOf(chessboard);
     }
+
+    public GameResult findWinner() {
+        if (notExistKingOf(WHITE)) {
+            return GameResult.BLACK_WIN;
+        }
+
+        if (notExistKingOf(BLACK)) {
+            return GameResult.WHITE_WIN;
+        }
+        return findResultByScore();
+    }
+
+    private boolean notExistKingOf(Color color) {
+        Set<Piece> pieces = findSameAllyPieces(color);
+        return pieces.stream()
+                .noneMatch(piece -> piece.isTypeOf(PieceType.KING));
+    }
+
+    private GameResult findResultByScore() {
+        double whiteScore = totalScoreOf(WHITE);
+        double blackScore = totalScoreOf(BLACK);
+        if (whiteScore > blackScore) {
+            return GameResult.WHITE_WIN;
+        }
+        if (whiteScore < blackScore) {
+            return GameResult.BLACK_WIN;
+        }
+        return GameResult.DRAW;
+    }
 }

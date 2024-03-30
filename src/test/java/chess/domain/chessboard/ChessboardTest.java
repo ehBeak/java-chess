@@ -168,4 +168,57 @@ class ChessboardTest {
                 () -> assertThat(chessBoard.totalScoreOf(Color.WHITE)).isEqualTo(18.5)
         );
     }
+
+    /*
+    .KR.....  8
+    P.PB....  7
+    .P..Q...  6
+    ........  5
+    .....nq.  4
+    .....pp.  3
+    .....p..  2
+    ....rk..  1
+
+    abcdefgh
+
+    black : K(0), Q(9), R(5), B(3), P(1), P(1), P(1) => 20
+    white : k(0), q(9), r(5), n(2.5), p(0.5), p(0.5), p(1) => 18.5
+     */
+    @DisplayName("점수가 많은 쪽이 우승자다.")
+    @Test
+    void findWinner() {
+        Chessboard chessBoard = Chessboard.createChessBoard(
+                Map.ofEntries(
+                        Map.entry(Square.of(B, EIGHT), new King(Color.BLACK, Square.of(B, EIGHT))),
+                        Map.entry(Square.of(E, SIX), new Queen(Color.BLACK, Square.of(E, SIX))),
+                        Map.entry(Square.of(C, EIGHT), new Rook(Color.BLACK, Square.of(C, EIGHT))),
+                        Map.entry(Square.of(D, SEVEN), new Bishop(Color.BLACK, Square.of(D, SEVEN))),
+                        Map.entry(Square.of(A, SEVEN), new BlackPawn(Square.of(A, SEVEN))),
+                        Map.entry(Square.of(C, SEVEN), new BlackPawn(Square.of(C, SEVEN))),
+                        Map.entry(Square.of(B, SIX), new BlackPawn(Square.of(B, SIX))),
+
+                        Map.entry(Square.of(F, ONE), new King(Color.WHITE, Square.of(F, ONE))),
+                        Map.entry(Square.of(G, FOUR), new Queen(Color.WHITE, Square.of(G, FOUR))),
+                        Map.entry(Square.of(E, ONE), new Rook(Color.WHITE, Square.of(E, ONE))),
+                        Map.entry(Square.of(F, FOUR), new Knight(Color.WHITE, Square.of(F, FOUR))),
+                        Map.entry(Square.of(F, TWO), new WhitePawn(Square.of(F, TWO))),
+                        Map.entry(Square.of(F, THREE), new WhitePawn(Square.of(F, THREE))),
+                        Map.entry(Square.of(G, THREE), new WhitePawn(Square.of(G, THREE)))
+                )
+        );
+
+        assertThat(chessBoard.findWinner()).isEqualTo(GameResult.BLACK_WIN);
+    }
+
+    @DisplayName("왕이 잡힌 경우 잡은 쪽이 우승자다.")
+    @Test
+    void findWinnerInCaseOfCatchingKing() {
+        Chessboard chessBoard = Chessboard.createChessBoard();
+        chessBoard.move(Square.of(E, TWO), Square.of(E, THREE));
+        chessBoard.move(Square.of(F, SEVEN), Square.of(F, SIX));
+        chessBoard.move(Square.of(D, ONE), Square.of(H, FIVE));
+        chessBoard.move(Square.of(H, FIVE), Square.of(E, EIGHT));
+
+        assertThat(chessBoard.findWinner()).isEqualTo(GameResult.WHITE_WIN);
+    }
 }

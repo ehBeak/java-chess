@@ -3,8 +3,10 @@ package chess.view;
 import static chess.view.command.Command.END;
 
 import chess.domain.attribute.Color;
+import chess.domain.chessboard.GameResult;
 import chess.view.command.Command;
 import chess.view.dto.ChessboardDto;
+import chess.view.dto.GameResultDto;
 import java.util.List;
 
 public class ResultView {
@@ -32,6 +34,11 @@ public class ResultView {
 
     public void printGameEndMessage() {
         System.out.println("게임이 종료되었습니다.");
+        System.out.println();
+    }
+
+    public void printWinner(GameResultDto gameResultDto) {
+        System.out.println(gameResultDto.output());
         System.out.println();
     }
 }

@@ -7,6 +7,7 @@ import chess.view.ResultView;
 import chess.view.command.Command;
 import chess.view.command.MoveCommand;
 import chess.view.dto.ChessboardDto;
+import chess.view.dto.GameResultDto;
 
 public class ChessGame {
 
@@ -56,12 +57,14 @@ public class ChessGame {
         resultView.printGameEndMessage();
         String endCommand = inputView.askCommand();
         if (Command.isStatus(endCommand)) {
+            System.out.println("---------");
+            resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
             resultView.printStatus(Color.WHITE, chessboard.totalScoreOf(Color.WHITE));
             resultView.printStatus(Color.BLACK, chessboard.totalScoreOf(Color.BLACK));
-
+            return;
         }
         if (Command.isEnd(endCommand)) {
-            return;
+            resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
         }
     }
 }
