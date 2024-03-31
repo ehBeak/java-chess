@@ -51,5 +51,11 @@ class ChessGameDaoTest {
             System.out.println(piece.getPieceType());
         }
     }
+
+    @Test
+    public void updatePieceMovement() {
+        final var chessGameDao = new ChessGameDao();
+        chessGameDao.updatePieceMovement(Square.of(File.B, Rank.TWO), Square.of(File.B, Rank.THREE));
+    }
 }
 

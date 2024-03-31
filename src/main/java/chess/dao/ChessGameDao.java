@@ -30,14 +30,6 @@ public final class ChessGameDao {
         }
     }
 
-    // findPieceAll
-    // initAllPiece
-    // addPiece
-    // deletePiece
-    // updatePiece
-    // deleteAll
-
-    //(String type, String team, String file, String rank)
     public void addPiece(final Piece piece) {
         final var query = "INSERT INTO pieces VALUES(?, ?, ?, ?)";
         String type = piece.getPieceType().toString();
@@ -90,6 +82,20 @@ public final class ChessGameDao {
             throw new RuntimeException(e);
         }
         return pieces;
+    }
+
+    public void updatePieceMovement(Square prevSquare, Square movedSquare) {
+        final var query = "UPDATE pieces SET piece_file = ?, piece_rank = ? WHERE piece_file = ? AND piece_rank = ?";
+        try (final var connection = getConnection();
+             final var preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, movedSquare.getFile().toString());
+            preparedStatement.setString(2, movedSquare.getRank().getValue());
+            preparedStatement.setString(3, prevSquare.getFile().toString());
+            preparedStatement.setString(4, prevSquare.getRank().getValue());
+            preparedStatement.executeUpdate();
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
 
