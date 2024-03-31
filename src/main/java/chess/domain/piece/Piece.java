@@ -90,8 +90,4 @@ public abstract class Piece {
     public boolean locateSameFile(File file) {
         return square.isSameFile(file);
     }
-
-    public boolean locateSameRank(Rank rank) {
-        return square.isSameRank(rank);
-    }
 }

@@ -115,7 +115,7 @@ public class Chessboard {
 
     private void validateSourceSquareOccupied(final Square square) {
         if (isBlank(square)) {
-            throw new IllegalArgumentException("기물이 존재하지 않습니다.");
+            throw new IllegalArgumentException("%s칸에 기물이 존재하지 않습니다.".formatted(square));
         }
     }
 

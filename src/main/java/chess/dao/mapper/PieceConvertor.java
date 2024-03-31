@@ -60,6 +60,6 @@ public enum PieceConvertor {
                 .filter(pieceConvertor -> pieceConvertor.name().equals(pieceType))
                 .map(pieceConvertor -> pieceConvertor.convert(color, square))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("기물의 타입이 존재하지 않습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("%s라는 기물의 타입이 존재하지 않습니다.".formatted(pieceType)));
     }
 }

@@ -6,7 +6,7 @@ public enum PieceType {
     ROOK(5),
     BISHOP(3),
     KNIGHT(2.5),
-    PAWN(1);// 0.5
+    PAWN(1);
 
     private final double score;
 
