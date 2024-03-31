@@ -50,7 +50,7 @@ public class Chessboard {
     public static Chessboard createChessBoard() {
         Map<Square, Piece> chessboard = new HashMap<>();
         Set<Piece> pieces = new HashSet<>();
-        pieces.addAll(creatWhitePieces());
+        pieces.addAll(createWhitePieces());
         pieces.addAll(createBlackPieces());
         for (Piece piece : pieces) {
             chessboard.put(piece.currentSquare(), piece);
@@ -66,7 +66,7 @@ public class Chessboard {
         return new Chessboard(chessboard);
     }
 
-    private static Set<Piece> creatWhitePieces() {
+    private static Set<Piece> createWhitePieces() {
         Set<Piece> pieces = new HashSet<>();
         pieces.add(new King(WHITE, Square.of(E, ONE)));
         pieces.add(new Queen(WHITE, Square.of(D, ONE)));
