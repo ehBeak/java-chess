@@ -28,5 +28,17 @@ class ChessGameDaoTest {
         final var chessGameDao = new ChessGameDao();
         chessGameDao.addPiece(new King(Color.WHITE, Square.of(File.F, Rank.TWO)));
     }
+
+    @Test
+    public void deleteAllPieces() {
+        final var chessGameDao = new ChessGameDao();
+        chessGameDao.deleteAllPieces();
+    }
+
+    @Test
+    public void initChessBoard() {
+        final var chessGameDao = new ChessGameDao();
+        chessGameDao.initChessboard();
+    }
 }
 

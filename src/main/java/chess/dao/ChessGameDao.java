@@ -6,6 +6,7 @@ import chess.domain.piece.Piece;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.Map;
 
 public final class ChessGameDao {
 
@@ -51,5 +52,22 @@ public final class ChessGameDao {
         }
     }
 
+    public void deleteAllPieces() {
+        final var query = "DELETE FROM pieces";
+        try (final var connection = getConnection();
+             final var preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.executeUpdate();
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void initChessboard() {
+        Chessboard chessBoard = Chessboard.createChessBoard();
+        Map<Square, Piece> chessboard = chessBoard.getChessboard();
+        for (Piece piece : chessboard.values()) {
+            addPiece(piece);
+        }
+    }
 }
 

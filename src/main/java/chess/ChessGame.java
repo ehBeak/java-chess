@@ -1,5 +1,6 @@
 package chess;
 
+import chess.dao.ChessGameDao;
 import chess.domain.attribute.Color;
 import chess.domain.chessboard.Chessboard;
 import chess.view.InputView;
@@ -13,10 +14,12 @@ public class ChessGame {
 
     private final InputView inputView;
     private final ResultView resultView;
+    private final ChessGameDao chessGameDao;
 
     public ChessGame(final InputView inputView, final ResultView resultView) {
         this.inputView = inputView;
         this.resultView = resultView;
+        this.chessGameDao = new ChessGameDao();
     }
 
     public void run() {
@@ -43,12 +46,17 @@ public class ChessGame {
         if (Command.isMove(command)) {
             moveChessPiece(chessboard, command);
             playByCommand(chessboard);
+            return;
         }
         if (Command.isStatus(command)) {
             boardStatus(chessboard);
+            initChessBoard(chessboard);
+            return;
         }
         if (Command.isEnd(command)) {
             endGame(chessboard);
+            initChessBoard(chessboard);
+            return;
         }
         throw new IllegalArgumentException("잘못된 명령어 입니다.");
     }
@@ -63,9 +71,26 @@ public class ChessGame {
         resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
         resultView.printStatus(Color.WHITE, chessboard.totalScoreOf(Color.WHITE));
         resultView.printStatus(Color.BLACK, chessboard.totalScoreOf(Color.BLACK));
+        initChessBoard(chessboard);
     }
 
     private void endGame(Chessboard chessboard) {
         resultView.printWinner(GameResultDto.of(chessboard.findWinner()));
+        initChessBoard(chessboard);
+    }
+
+    private void initChessBoard(Chessboard chessboard) {
+        deleteChessboard(chessboard);
+        createNewChessboard(chessboard);
+    }
+
+    private void deleteChessboard(Chessboard chessboard) {
+        chessboard.deleteAllPieces();
+        chessGameDao.deleteAllPieces();
+    }
+
+    private void createNewChessboard(Chessboard chessboard) {
+        chessboard.initChessboard();
+        chessGameDao.initChessboard();
     }
 }

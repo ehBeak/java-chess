@@ -1,4 +1,5 @@
 import chess.ChessGame;
+import chess.dao.ChessGameDao;
 import chess.view.InputView;
 import chess.view.ResultView;
 

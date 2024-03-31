@@ -15,6 +15,8 @@ import static chess.domain.attribute.Rank.ONE;
 import static chess.domain.attribute.Rank.SEVEN;
 import static chess.domain.attribute.Rank.TWO;
 
+import chess.dao.ChessGameDao;
+import chess.dao.mapper.PieceMapper;
 import chess.domain.attribute.Color;
 import chess.domain.attribute.File;
 import chess.domain.attribute.Square;
@@ -27,6 +29,7 @@ import chess.domain.piece.PieceType;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.piece.WhitePawn;
+import chess.view.dto.ChessboardDto;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,6 +40,8 @@ public class Chessboard {
 
     private static final int INITIAL_KING_COUNT = 2;
     private final Map<Square, Piece> chessboard;
+
+    private ChessGameDao chessGameDao;
 
     private Chessboard(final Map<Square, Piece> chessboard) {
         this.chessboard = chessboard;
@@ -202,5 +207,13 @@ public class Chessboard {
             return GameResult.BLACK_WIN;
         }
         return GameResult.DRAW;
+    }
+
+    public void deleteAllPieces() {
+        chessboard.clear();
+    }
+
+    public void initChessboard() {
+
     }
 }
