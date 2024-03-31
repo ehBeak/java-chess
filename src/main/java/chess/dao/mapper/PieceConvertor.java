@@ -51,8 +51,7 @@ public enum PieceConvertor {
             }
             return new BlackPawn(square);
         }
-    }
-    ;
+    };
 
     abstract Piece convert(Color color, Square square);
 

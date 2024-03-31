@@ -43,7 +43,7 @@ public class Chessboard {
         this.chessboard = chessboard;
     }
 
-    protected static Chessboard createChessBoard(Map<Square, Piece> map) {//todo
+    protected static Chessboard createChessBoard(Map<Square, Piece> map) {
         return new Chessboard(new HashMap<>(map));
     }
 

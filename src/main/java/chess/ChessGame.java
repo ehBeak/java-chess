@@ -37,7 +37,7 @@ public class ChessGame {
         playByCommand(chessboard);
     }
 
-    private void playByCommand(final Chessboard chessboard) {//todo 상태패턴
+    private void playByCommand(final Chessboard chessboard) {
         if (chessboard.catchKing()) {
             endGame(chessboard);
             return;
