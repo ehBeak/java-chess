@@ -10,9 +10,7 @@ import chess.domain.attribute.File;
 import chess.domain.attribute.Rank;
 import chess.domain.attribute.Square;
 import chess.domain.piece.King;
-import chess.domain.piece.Piece;
 import java.sql.SQLException;
-import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -45,28 +43,31 @@ class ChessGameDaoTest {
     @Test
     public void addPiece() {
         final var chessGameDao = new ChessGameDao();
-        chessGameDao.addPiece(new King(Color.WHITE, Square.of(File.F, Rank.TWO)));
+        chessGameDao.addPiece(new King(Color.WHITE, Square.of(File.F, Rank.FOUR)));
+        assertTrue(chessGameDao.existPieceIn(Square.of(File.F, Rank.FOUR)));
     }
 
     @Test
     public void deleteAllPieces() {
         final var chessGameDao = new ChessGameDao();
         chessGameDao.deleteAllPieces();
+        assertThat(chessGameDao.findAllPieces()).isEmpty();
     }
 
     @Test
     public void findAllPieces() {
         final var chessGameDao = new ChessGameDao();
-        List<Piece> allPieces = chessGameDao.findAllPieces();
-        for (Piece piece : allPieces) {
-            System.out.println(piece.getPieceType());
-        }
+        assertThat(chessGameDao.findAllPieces()).hasSize(32);
     }
 
     @Test
     public void updatePieceMovement() {
         final var chessGameDao = new ChessGameDao();
         chessGameDao.updatePieceMovement(Square.of(File.B, Rank.TWO), Square.of(File.B, Rank.THREE));
+        assertAll(
+                () -> assertFalse(chessGameDao.existPieceIn(Square.of(File.B, Rank.TWO))),
+                () -> assertTrue(chessGameDao.existPieceIn(Square.of(File.B, Rank.THREE)))
+        );
     }
 
     @Test
