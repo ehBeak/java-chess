@@ -1,6 +1,9 @@
 package chess.dao;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import chess.domain.attribute.Color;
 import chess.domain.attribute.File;
@@ -10,11 +13,25 @@ import chess.domain.piece.King;
 import chess.domain.piece.Piece;
 import java.sql.SQLException;
 import java.util.List;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class ChessGameDaoTest {
 
     private final ChessGameDao chessGameDao = new ChessGameDao();
+
+    @BeforeEach
+    void initChessBoardBeforeTest() {
+        chessGameDao.deleteAllPieces();
+        chessGameDao.initChessboard();
+    }
+
+    @AfterEach
+    void initChessBoardAfterAllTest() {
+        chessGameDao.deleteAllPieces();
+        chessGameDao.initChessboard();
+    }
 
     @Test
     public void connection() {
@@ -38,12 +55,6 @@ class ChessGameDaoTest {
     }
 
     @Test
-    public void initChessBoard() {
-        final var chessGameDao = new ChessGameDao();
-        chessGameDao.initChessboard();
-    }
-
-    @Test
     public void findAllPieces() {
         final var chessGameDao = new ChessGameDao();
         List<Piece> allPieces = chessGameDao.findAllPieces();
@@ -56,6 +67,22 @@ class ChessGameDaoTest {
     public void updatePieceMovement() {
         final var chessGameDao = new ChessGameDao();
         chessGameDao.updatePieceMovement(Square.of(File.B, Rank.TWO), Square.of(File.B, Rank.THREE));
+    }
+
+    @Test
+    public void deletePieceOf() {
+        final var chessGameDao = new ChessGameDao();
+        chessGameDao.deletePieceOf(Square.of(File.B, Rank.TWO));
+        assertFalse(chessGameDao.existPieceIn(Square.of(File.B, Rank.TWO)));
+    }
+
+    @Test
+    public void existPieceIn() {
+        final var chessGameDao = new ChessGameDao();
+        assertAll(
+                () -> assertTrue(chessGameDao.existPieceIn(Square.of(File.B, Rank.TWO))),
+                () -> assertFalse(chessGameDao.existPieceIn(Square.of(File.C, Rank.FOUR)))
+        );
     }
 }
 

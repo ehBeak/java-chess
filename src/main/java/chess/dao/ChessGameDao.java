@@ -57,6 +57,36 @@ public final class ChessGameDao {
         }
     }
 
+    public void deletePieceOf(Square square) {
+        final var query = "DELETE FROM pieces WHERE piece_file = ? AND piece_rank = ?";
+        try (final var connection = getConnection();
+             final var preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, square.getFile().toString());
+            preparedStatement.setString(2, square.getRank().getValue());
+            preparedStatement.executeUpdate();
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public boolean existPieceIn(Square square) {
+        final var query = "SELECT EXISTS("
+                + "SELECT 1 FROM pieces WHERE piece_file = ? AND piece_rank = ?"
+                + ") as cnt";
+        try (final var connection = getConnection();
+             final var preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, square.getFile().toString());
+            preparedStatement.setString(2, square.getRank().getValue());
+            final var resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("cnt").equals("1");
+            }
+            return false;
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void initChessboard() {
         Chessboard chessBoard = Chessboard.createChessBoard();
         Map<Square, Piece> chessboard = chessBoard.getChessboard();

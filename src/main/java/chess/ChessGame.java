@@ -64,6 +64,9 @@ public class ChessGame {
     private void moveChessPiece(final Chessboard chessboard, String command) {
         MoveCommand moveCommand = new MoveCommand(command);
         chessboard.move(moveCommand.source(), moveCommand.target());
+        if (chessGameDao.existPieceIn(moveCommand.target())) {
+            chessGameDao.deletePieceOf(moveCommand.target());
+        }
         chessGameDao.updatePieceMovement(moveCommand.source(), moveCommand.target());
         resultView.printBoard(new ChessboardDto(chessboard));
     }
