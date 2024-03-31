@@ -1,5 +1,8 @@
 package chess.dao;
 
+import chess.domain.attribute.Square;
+import chess.domain.chessboard.Chessboard;
+import chess.domain.piece.Piece;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -22,5 +25,31 @@ public final class ChessGameDao {
             return null;
         }
     }
+
+    // findPieceAll
+    // initAllPiece
+    // addPiece
+    // deletePiece
+    // updatePiece
+    // deleteAll
+
+    //(String type, String team, String file, String rank)
+    public void addPiece(final Piece piece) {
+        final var query = "INSERT INTO pieces VALUES(?, ?, ?, ?)";
+        String type = piece.getPieceType().toString();
+        String color = piece.getColor().toString();
+        Square square = piece.currentSquare();
+        try (final var connection = getConnection();
+             final var preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setString(1, type);
+            preparedStatement.setString(2, color);
+            preparedStatement.setString(3, square.getFile().toString());
+            preparedStatement.setString(4, square.getRank().toString());
+            preparedStatement.executeUpdate();
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }
 

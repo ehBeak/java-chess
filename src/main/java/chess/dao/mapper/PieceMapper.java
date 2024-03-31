@@ -15,14 +15,14 @@ import chess.domain.piece.WhitePawn;
 
 public class PieceMapper {
 
-    public Piece mapToDomain(PieceDao pieceDao) {
+    public static Piece mapToDomain(PieceDao pieceDao) {
         Color color = Color.of(pieceDao.team());
         String pieceType = pieceDao.type();
         Square square = Square.of(File.of(pieceDao.file()), Rank.of(pieceDao.rank()));
         return createPiece(color, pieceType, square);
     }
 
-    public PieceDao mapToDao(Piece piece) {
+    public static PieceDao mapToDao(Piece piece) {
         String type = piece.getPieceType().toString();
         String color = piece.getColor().toString();
         Square square = piece.currentSquare();
@@ -31,7 +31,7 @@ public class PieceMapper {
         return new PieceDao(type, color, file, rank);
     }
 
-    private Piece createPiece(Color color, String pieceType, Square square) {
+    private static Piece createPiece(Color color, String pieceType, Square square) {
         if (pieceType.equals("KING")) {
             return new King(color, square);
         }
