@@ -93,6 +93,10 @@ public enum Rank {
         return true;
     }
 
+    public String getValue() {
+        return String.valueOf(value);//todo string
+    }
+
     public boolean isRankSeven() {
         return this == SEVEN;
     }

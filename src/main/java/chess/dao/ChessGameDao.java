@@ -1,11 +1,15 @@
 package chess.dao;
 
+import chess.dao.mapper.PieceMapper;
 import chess.domain.attribute.Square;
 import chess.domain.chessboard.Chessboard;
 import chess.domain.piece.Piece;
+import java.nio.MappedByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public final class ChessGameDao {
@@ -45,7 +49,7 @@ public final class ChessGameDao {
             preparedStatement.setString(1, type);
             preparedStatement.setString(2, color);
             preparedStatement.setString(3, square.getFile().toString());
-            preparedStatement.setString(4, square.getRank().toString());
+            preparedStatement.setString(4, square.getRank().getValue());
             preparedStatement.executeUpdate();
         } catch (final SQLException e) {
             throw new RuntimeException(e);
@@ -68,6 +72,25 @@ public final class ChessGameDao {
         for (Piece piece : chessboard.values()) {
             addPiece(piece);
         }
+    }
+
+    public List<Piece> findAllPieces() {
+        final var query = "SELECT * FROM pieces";
+        List<Piece> pieces = new ArrayList<>();
+        try (final var connection = getConnection();
+             final var preparedStatement = connection.prepareStatement(query)) {
+            final var resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Piece piece = PieceMapper.mapToDomain(new PieceDao(resultSet.getString("piece_type"),
+                        resultSet.getString("piece_team"),
+                        resultSet.getString("piece_file"),
+                        resultSet.getString("piece_rank")));
+                pieces.add(piece);
+            }
+        } catch (final SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return pieces;
     }
 }
 

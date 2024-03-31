@@ -32,6 +32,7 @@ import chess.domain.piece.WhitePawn;
 import chess.view.dto.ChessboardDto;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -40,8 +41,6 @@ public class Chessboard {
 
     private static final int INITIAL_KING_COUNT = 2;
     private final Map<Square, Piece> chessboard;
-
-    private ChessGameDao chessGameDao;
 
     private Chessboard(final Map<Square, Piece> chessboard) {
         this.chessboard = chessboard;
@@ -56,6 +55,14 @@ public class Chessboard {
         Set<Piece> pieces = new HashSet<>();
         pieces.addAll(creatWhitePieces());
         pieces.addAll(createBlackPieces());
+        for (Piece piece : pieces) {
+            chessboard.put(piece.currentSquare(), piece);
+        }
+        return new Chessboard(chessboard);
+    }
+
+    public static Chessboard of(List<Piece> pieces) {
+        Map<Square, Piece> chessboard = new HashMap<>();
         for (Piece piece : pieces) {
             chessboard.put(piece.currentSquare(), piece);
         }
@@ -211,9 +218,5 @@ public class Chessboard {
 
     public void deleteAllPieces() {
         chessboard.clear();
-    }
-
-    public void initChessboard() {
-
     }
 }

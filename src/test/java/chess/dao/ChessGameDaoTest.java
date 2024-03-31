@@ -7,7 +7,9 @@ import chess.domain.attribute.File;
 import chess.domain.attribute.Rank;
 import chess.domain.attribute.Square;
 import chess.domain.piece.King;
+import chess.domain.piece.Piece;
 import java.sql.SQLException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class ChessGameDaoTest {
@@ -39,6 +41,15 @@ class ChessGameDaoTest {
     public void initChessBoard() {
         final var chessGameDao = new ChessGameDao();
         chessGameDao.initChessboard();
+    }
+
+    @Test
+    public void findAllPieces() {
+        final var chessGameDao = new ChessGameDao();
+        List<Piece> allPieces = chessGameDao.findAllPieces();
+        for (Piece piece : allPieces) {
+            System.out.println(piece.getPieceType());
+        }
     }
 }
 

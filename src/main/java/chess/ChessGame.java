@@ -2,13 +2,17 @@ package chess;
 
 import chess.dao.ChessGameDao;
 import chess.domain.attribute.Color;
+import chess.domain.attribute.Square;
 import chess.domain.chessboard.Chessboard;
+import chess.domain.piece.Piece;
 import chess.view.InputView;
 import chess.view.ResultView;
 import chess.view.command.Command;
 import chess.view.command.MoveCommand;
 import chess.view.dto.ChessboardDto;
 import chess.view.dto.GameResultDto;
+import java.util.List;
+import java.util.Map.Entry;
 
 public class ChessGame {
 
@@ -32,7 +36,7 @@ public class ChessGame {
     }
 
     private void play() {
-        Chessboard chessboard = Chessboard.createChessBoard();
+        Chessboard chessboard = Chessboard.of(chessGameDao.findAllPieces());
         resultView.printBoard(new ChessboardDto(chessboard));
         playByCommand(chessboard);
     }
@@ -81,7 +85,7 @@ public class ChessGame {
 
     private void initChessBoard(Chessboard chessboard) {
         deleteChessboard(chessboard);
-        createNewChessboard(chessboard);
+        createNewChessboard();
     }
 
     private void deleteChessboard(Chessboard chessboard) {
@@ -89,8 +93,7 @@ public class ChessGame {
         chessGameDao.deleteAllPieces();
     }
 
-    private void createNewChessboard(Chessboard chessboard) {
-        chessboard.initChessboard();
+    private void createNewChessboard() {
         chessGameDao.initChessboard();
     }
 }

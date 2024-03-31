@@ -8,6 +8,7 @@ import chess.domain.attribute.Square;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.BlackPawn;
 import chess.domain.piece.King;
+import chess.domain.piece.Knight;
 import chess.domain.piece.Piece;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
@@ -45,7 +46,7 @@ public class PieceMapper {
             return new Bishop(color, square);
         }
         if (pieceType.equals("KNIGHT")) {
-            return new King(color, square);
+            return new Knight(color, square);
         }
         if (pieceType.equals("PAWN")) {
             if (color.equals(Color.WHITE)) {
