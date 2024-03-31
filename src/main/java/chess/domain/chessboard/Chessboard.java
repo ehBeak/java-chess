@@ -15,8 +15,6 @@ import static chess.domain.attribute.Rank.ONE;
 import static chess.domain.attribute.Rank.SEVEN;
 import static chess.domain.attribute.Rank.TWO;
 
-import chess.dao.ChessGameDao;
-import chess.dao.mapper.PieceMapper;
 import chess.domain.attribute.Color;
 import chess.domain.attribute.File;
 import chess.domain.attribute.Square;
@@ -29,7 +27,6 @@ import chess.domain.piece.PieceType;
 import chess.domain.piece.Queen;
 import chess.domain.piece.Rook;
 import chess.domain.piece.WhitePawn;
-import chess.view.dto.ChessboardDto;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;

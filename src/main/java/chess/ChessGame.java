@@ -2,17 +2,13 @@ package chess;
 
 import chess.dao.ChessGameDao;
 import chess.domain.attribute.Color;
-import chess.domain.attribute.Square;
 import chess.domain.chessboard.Chessboard;
-import chess.domain.piece.Piece;
 import chess.view.InputView;
 import chess.view.ResultView;
 import chess.view.command.Command;
 import chess.view.command.MoveCommand;
 import chess.view.dto.ChessboardDto;
 import chess.view.dto.GameResultDto;
-import java.util.List;
-import java.util.Map.Entry;
 
 public class ChessGame {
 

@@ -4,7 +4,6 @@ import chess.dao.mapper.PieceMapper;
 import chess.domain.attribute.Square;
 import chess.domain.chessboard.Chessboard;
 import chess.domain.piece.Piece;
-import java.nio.MappedByteBuffer;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
