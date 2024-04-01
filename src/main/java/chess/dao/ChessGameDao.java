@@ -1,5 +1,6 @@
 package chess.dao;
 
+import chess.dao.convertor.PieceDto;
 import chess.dao.convertor.PiecesConvertor;
 import chess.domain.attribute.Square;
 import chess.domain.chessboard.Chessboard;
@@ -84,7 +85,7 @@ public final class ChessGameDao {
             PreparedStatement preparedStatement = connection.prepareStatement(query);
             final var resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
-                Piece piece = PiecesConvertor.mapToDomain(new PieceDao(resultSet.getString("piece_type"),
+                Piece piece = PiecesConvertor.mapToDomain(new PieceDto(resultSet.getString("piece_type"),
                         resultSet.getString("piece_team"),
                         resultSet.getString("piece_file"),
                         resultSet.getString("piece_rank")));
