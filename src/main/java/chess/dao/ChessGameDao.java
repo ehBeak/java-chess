@@ -4,30 +4,17 @@ import chess.dao.mapper.PieceMapper;
 import chess.domain.attribute.Square;
 import chess.domain.chessboard.Chessboard;
 import chess.domain.piece.Piece;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 public final class ChessGameDao {
 
-    private static final String SERVER = "localhost:13306"; // MySQL 서버 주소
-    private static final String DATABASE = "chess"; // MySQL DATABASE 이름
-    private static final String OPTION = "?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-    private static final String USERNAME = "root"; //  MySQL 서버 아이디
-    private static final String PASSWORD = "root"; // MySQL 서버 비밀번호
+    private final JdbcConnection jdbcConnection;
 
-    public Connection getConnection() {
-        // 드라이버 연결
-        try {
-            return DriverManager.getConnection("jdbc:mysql://" + SERVER + "/" + DATABASE + OPTION, USERNAME, PASSWORD);
-        } catch (final SQLException e) {
-            System.err.println("DB 연결 오류:" + e.getMessage());
-            e.printStackTrace();
-            return null;
-        }
+    public ChessGameDao() {
+        this.jdbcConnection = new JdbcConnection();
     }
 
     public void addPiece(final Piece piece) {
@@ -35,46 +22,43 @@ public final class ChessGameDao {
         String type = piece.getPieceType().toString();
         String color = piece.getColor().toString();
         Square square = piece.currentSquare();
-        try (final var connection = getConnection();
-             final var preparedStatement = connection.prepareStatement(query)) {
+        jdbcConnection.executeQuery(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, type);
             preparedStatement.setString(2, color);
             preparedStatement.setString(3, square.getFile().toString());
             preparedStatement.setString(4, square.getRank().getValue());
             preparedStatement.executeUpdate();
-        } catch (final SQLException e) {
-            throw new RuntimeException(e);
-        }
+            return null;
+        });
     }
 
     public void deleteAllPieces() {
         final var query = "DELETE FROM pieces";
-        try (final var connection = getConnection();
-             final var preparedStatement = connection.prepareStatement(query)) {
+        jdbcConnection.executeQuery(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.executeUpdate();
-        } catch (final SQLException e) {
-            throw new RuntimeException(e);
-        }
+            return null;
+        });
     }
 
     public void deletePieceOf(Square square) {
         final var query = "DELETE FROM pieces WHERE piece_file = ? AND piece_rank = ?";
-        try (final var connection = getConnection();
-             final var preparedStatement = connection.prepareStatement(query)) {
+        jdbcConnection.executeQuery(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, square.getFile().toString());
             preparedStatement.setString(2, square.getRank().getValue());
             preparedStatement.executeUpdate();
-        } catch (final SQLException e) {
-            throw new RuntimeException(e);
-        }
+            return null;
+        });
     }
 
     public boolean existPieceIn(Square square) {
         final var query = "SELECT EXISTS("
                 + "SELECT 1 FROM pieces WHERE piece_file = ? AND piece_rank = ?"
                 + ") as cnt";
-        try (final var connection = getConnection();
-             final var preparedStatement = connection.prepareStatement(query)) {
+        return jdbcConnection.executeQuery(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, square.getFile().toString());
             preparedStatement.setString(2, square.getRank().getValue());
             final var resultSet = preparedStatement.executeQuery();
@@ -82,9 +66,7 @@ public final class ChessGameDao {
                 return resultSet.getString("cnt").equals("1");
             }
             return false;
-        } catch (final SQLException e) {
-            throw new RuntimeException(e);
-        }
+        });
     }
 
     public void initChessboard() {
@@ -97,9 +79,9 @@ public final class ChessGameDao {
 
     public List<Piece> findAllPieces() {
         final var query = "SELECT * FROM pieces";
-        List<Piece> pieces = new ArrayList<>();
-        try (final var connection = getConnection();
-             final var preparedStatement = connection.prepareStatement(query)) {
+        return jdbcConnection.executeQuery(connection -> {
+            List<Piece> pieces = new ArrayList<>();
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             final var resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 Piece piece = PieceMapper.mapToDomain(new PieceDao(resultSet.getString("piece_type"),
@@ -108,24 +90,21 @@ public final class ChessGameDao {
                         resultSet.getString("piece_rank")));
                 pieces.add(piece);
             }
-        } catch (final SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return pieces;
+            return pieces;
+        });
     }
 
     public void updatePieceMovement(Square prevSquare, Square movedSquare) {
         final var query = "UPDATE pieces SET piece_file = ?, piece_rank = ? WHERE piece_file = ? AND piece_rank = ?";
-        try (final var connection = getConnection();
-             final var preparedStatement = connection.prepareStatement(query)) {
+        jdbcConnection.executeQuery(connection -> {
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
             preparedStatement.setString(1, movedSquare.getFile().toString());
             preparedStatement.setString(2, movedSquare.getRank().getValue());
             preparedStatement.setString(3, prevSquare.getFile().toString());
             preparedStatement.setString(4, prevSquare.getRank().getValue());
             preparedStatement.executeUpdate();
-        } catch (final SQLException e) {
-            throw new RuntimeException(e);
-        }
+            return null;
+        });
     }
 }
 

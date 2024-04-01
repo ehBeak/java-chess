@@ -3,7 +3,6 @@ package chess.domain.piece;
 import chess.domain.attribute.Color;
 import chess.domain.attribute.File;
 import chess.domain.attribute.Movement;
-import chess.domain.attribute.Rank;
 import chess.domain.attribute.Square;
 import java.util.Objects;
 import java.util.Set;

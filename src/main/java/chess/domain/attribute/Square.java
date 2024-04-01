@@ -115,6 +115,7 @@ public class Square {
     public Square moveLeft() {
         return moveLeft(1);
     }
+
     public Square moveLeft(int step) {
         return Square.of(file.left(Math.abs(step)), rank);
     }
