@@ -168,6 +168,7 @@ abcdefgh
 
 ### DDL
 
+- 테이블 생성 쿼리
 ```SQL
 create table pieces(
   piece_type varchar(8) not null,
@@ -175,4 +176,43 @@ create table pieces(
   piece_file varchar(1) not null,
   piece_rank varchar(6) not null
 );
+```
+
+- insert 쿼리
+```SQL
+INSERT INTO pieces (piece_type, piece_team, piece_file, piece_rank)
+VALUES
+  ('PAWN', 'WHITE', 'B', 2),
+  ('PAWN', 'BLACK', 'E', 7),
+  ('KING', 'WHITE', 'E', 1),
+  ('KING', 'BLACK', 'E', 8),
+  ('PAWN', 'BLACK', 'G', 7),
+  ('KNIGHT', 'WHITE', 'G', 1),
+  ('BISHOP', 'WHITE', 'C', 1),
+  ('KNIGHT', 'BLACK', 'G', 8),
+  ('BISHOP', 'BLACK', 'C', 8),
+  ('PAWN', 'WHITE', 'H', 2),
+  ('PAWN', 'BLACK', 'C', 7),
+  ('PAWN', 'BLACK', 'A', 7),
+  ('ROOK', 'WHITE', 'A', 1),
+  ('PAWN', 'WHITE', 'F', 2),
+  ('ROOK', 'BLACK', 'A', 8),
+  ('PAWN', 'WHITE', 'D', 2),
+  ('PAWN', 'BLACK', 'B', 7),
+  ('KNIGHT', 'WHITE', 'B', 1),
+  ('PAWN', 'WHITE', 'E', 2),
+  ('KNIGHT', 'BLACK', 'B', 8),
+  ('PAWN', 'WHITE', 'G', 2),
+  ('PAWN', 'WHITE', 'C', 2),
+  ('PAWN', 'BLACK', 'H', 7),
+  ('ROOK', 'WHITE', 'H', 1),
+  ('ROOK', 'BLACK', 'H', 8),
+  ('PAWN', 'WHITE', 'A', 2),
+  ('PAWN', 'BLACK', 'F', 7),
+  ('BISHOP', 'WHITE', 'F', 1),
+  ('BISHOP', 'BLACK', 'F', 8),
+  ('PAWN', 'BLACK', 'D', 7),
+  ('QUEEN', 'WHITE', 'D', 1),
+  ('QUEEN', 'BLACK', 'D', 8);
+
 ```
