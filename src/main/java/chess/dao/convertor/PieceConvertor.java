@@ -1,4 +1,4 @@
-package chess.dao.mapper;
+package chess.dao.convertor;
 
 import chess.domain.attribute.Color;
 import chess.domain.attribute.Square;
