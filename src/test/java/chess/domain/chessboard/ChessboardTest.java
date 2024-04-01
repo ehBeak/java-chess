@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import chess.domain.attribute.Color;
+import chess.domain.attribute.Score;
 import chess.domain.attribute.Square;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.BlackPawn;
@@ -86,8 +87,8 @@ class ChessboardTest {
         );
 
         assertAll(
-                () -> assertThat(chessBoard.totalScoreOf(Color.BLACK)).isEqualTo(20),
-                () -> assertThat(chessBoard.totalScoreOf(Color.WHITE)).isEqualTo(19.5)
+                () -> assertThat(chessBoard.totalScoreOf(Color.BLACK)).isEqualTo(new Score(20)),
+                () -> assertThat(chessBoard.totalScoreOf(Color.WHITE)).isEqualTo(new Score(19.5))
         );
     }
 
@@ -120,8 +121,8 @@ class ChessboardTest {
                 ));
 
         assertAll(
-                () -> assertThat(chessBoard.totalScoreOf(Color.BLACK)).isEqualTo(0),
-                () -> assertThat(chessBoard.totalScoreOf(Color.WHITE)).isEqualTo(17.5)
+                () -> assertThat(chessBoard.totalScoreOf(Color.BLACK)).isEqualTo(new Score(0)),
+                () -> assertThat(chessBoard.totalScoreOf(Color.WHITE)).isEqualTo(new Score(17.5))
         );
     }
 
@@ -164,8 +165,8 @@ class ChessboardTest {
         );
 
         assertAll(
-                () -> assertThat(chessBoard.totalScoreOf(Color.BLACK)).isEqualTo(20),
-                () -> assertThat(chessBoard.totalScoreOf(Color.WHITE)).isEqualTo(18.5)
+                () -> assertThat(chessBoard.totalScoreOf(Color.BLACK)).isEqualTo(new Score(20)),
+                () -> assertThat(chessBoard.totalScoreOf(Color.WHITE)).isEqualTo(new Score(18.5))
         );
     }
 

@@ -17,6 +17,7 @@ import static chess.domain.attribute.Rank.TWO;
 
 import chess.domain.attribute.Color;
 import chess.domain.attribute.File;
+import chess.domain.attribute.Score;
 import chess.domain.attribute.Square;
 import chess.domain.piece.Bishop;
 import chess.domain.piece.BlackPawn;
@@ -131,20 +132,20 @@ public class Chessboard {
         return count != INITIAL_KING_COUNT;
     }
 
-    public double totalScoreOf(Color color) {
+    public Score totalScoreOf(Color color) {
         Set<Piece> sameColorPieces = findSameAllyPieces(color);
-        double exceptPawnScore = calculateTotalScoreExceptPawn(sameColorPieces);
+        Score exceptPawnScore = calculateTotalScoreExceptPawn(sameColorPieces);
         Set<Piece> pawns = filterNotPawns(sameColorPieces);
-        return exceptPawnScore + pawns.stream()
-                .mapToDouble(pawn -> calculatePawnScore(pawn, pawns))
-                .sum();
+        return exceptPawnScore.add(pawns.stream()
+                .mapToDouble(pawn -> calculatePawnScore(pawn, pawns).getValue())
+                .sum());
     }
 
-    private Double calculatePawnScore(Piece pawn, Set<Piece> pawns) {
+    private Score calculatePawnScore(Piece pawn, Set<Piece> pawns) {
         if (hasSameFileIn(pawns, pawn.getLocatedFile())) {
-            return 0.5;
+            return new Score(0.5);
         }
-        return 1.0;
+        return new Score(1.0);
     }
 
     private Set<Piece> filterNotPawns(Set<Piece> sameColorPieces) {
@@ -159,12 +160,11 @@ public class Chessboard {
                 .collect(Collectors.toSet());
     }
 
-    private double calculateTotalScoreExceptPawn(Set<Piece> sameColorPieces) {
-        return sameColorPieces.stream()
+    private Score calculateTotalScoreExceptPawn(Set<Piece> sameColorPieces) {
+        return new Score(sameColorPieces.stream()
                 .filter(piece -> piece.isNotTypeOf(PieceType.PAWN))
-                .reduce(0.0,
-                        (sum, piece) -> sum + piece.getScore(),
-                        (previous, next) -> next);
+                .mapToDouble(piece -> piece.getScore().getValue())
+                .sum());
     }
 
     private boolean hasSameFileIn(Set<Piece> pawns, File file) {
@@ -201,12 +201,12 @@ public class Chessboard {
     }
 
     private GameResult findResultByScore() {
-        double whiteScore = totalScoreOf(WHITE);
-        double blackScore = totalScoreOf(BLACK);
-        if (whiteScore > blackScore) {
+        Score whiteScore = totalScoreOf(WHITE);
+        Score blackScore = totalScoreOf(BLACK);
+        if (whiteScore.isHigherThan(blackScore)) {
             return GameResult.WHITE_WIN;
         }
-        if (whiteScore < blackScore) {
+        if (whiteScore.isLowerThan(blackScore)) {
             return GameResult.BLACK_WIN;
         }
         return GameResult.DRAW;

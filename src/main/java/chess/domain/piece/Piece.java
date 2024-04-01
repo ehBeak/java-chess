@@ -3,6 +3,7 @@ package chess.domain.piece;
 import chess.domain.attribute.Color;
 import chess.domain.attribute.File;
 import chess.domain.attribute.Movement;
+import chess.domain.attribute.Score;
 import chess.domain.attribute.Square;
 import java.util.Objects;
 import java.util.Set;
@@ -51,8 +52,8 @@ public abstract class Piece {
         return square;
     }
 
-    public double getScore() {
-        return this.pieceType.getScore();
+    public Score getScore() {
+        return pieceType.getScore();
     }
 
     public File getLocatedFile() {
