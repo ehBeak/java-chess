@@ -132,23 +132,22 @@ public class Chessboard {
     }
 
     public double totalScoreOf(Color color) {
-        Set<Piece> samColorPieces = findSameAllyPieces(color);
-        double exceptPawnScore = calculateTotalScoreExceptPawn(samColorPieces);
-        Set<Piece> pawns = filterPawns(samColorPieces);
-        return pawns.stream()
-                .reduce(exceptPawnScore,
-                        (res, pawn) -> calculatePawnScore(res, pawn, pawns),
-                        (prev, next) -> next);
+        Set<Piece> sameColorPieces = findSameAllyPieces(color);
+        double exceptPawnScore = calculateTotalScoreExceptPawn(sameColorPieces);
+        Set<Piece> pawns = filterNotPawns(sameColorPieces);
+        return exceptPawnScore + pawns.stream()
+                .mapToDouble(pawn -> calculatePawnScore(pawn, pawns))
+                .sum();
     }
 
-    private Double calculatePawnScore(Double res, Piece pawn, Set<Piece> pawns) {
+    private Double calculatePawnScore(Piece pawn, Set<Piece> pawns) {
         if (hasSameFileIn(pawns, pawn.getLocatedFile())) {
-            return res + 0.5;
+            return 0.5;
         }
-        return res + 1;
+        return 1.0;
     }
 
-    private Set<Piece> filterPawns(Set<Piece> sameColorPieces) {
+    private Set<Piece> filterNotPawns(Set<Piece> sameColorPieces) {
         return sameColorPieces.stream()
                 .filter(piece -> piece.isTypeOf(PieceType.PAWN))
                 .collect(Collectors.toSet());
