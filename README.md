@@ -164,3 +164,15 @@ abcdefgh
 - 위와 같은 체스 판의 점수 결과는 검은색(대문자)은 20점. 흰색(소문자)은 19.5점이 된다.
 - 검은색은 5(rook) + 3(bishop) + 9(queen) + 3(pawn) + 0(king) = 20점
 - 흰색은 5(rook) + 2.5(knight) + 9(queen) + 3(pawn, 4개의 pawn이 있지만 세로로 있어 각 0.5이 된다.) + 0(king) = 19.5점
+
+
+### DDL
+
+```SQL
+create table pieces(
+  piece_type varchar(8) not null,
+  piece_team varchar(6) not null,
+  piece_file varchar(1) not null,
+  piece_rank varchar(6) not null
+);
+```
